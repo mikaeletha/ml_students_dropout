@@ -3,33 +3,52 @@ import numpy as np
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
 
+
+# Função para perguntar ao usuário a escolha do dataset
+def get_dataset_type():
+    print("Escolha o tipo de dataset:")
+    print("1 - Completo (students_dropout_train.csv)")
+    print("2 - Limpo (cm_students_dropout_train.csv)")
+    choice = input("Digite sua escolha (1 ou 2): ")
+
+    if choice == "1":
+        return "students_dropout_train.csv"
+    elif choice == "2":
+        return "cm_students_dropout_train.csv"
+    else:
+        print("Escolha inválida! Carregando o dataset completo por padrão.")
+        return "students_dropout_train.csv"
+
+
+# Obter o nome do arquivo com base na escolha do usuário
+train_file = get_dataset_type()
+file_path = f"pre_processed/{train_file}"
+
+# Configuração dos parâmetros para GridSearchCV
 param = [
     {
-        # 'C': [0.25, 0.30, 0.35, 0.4],
+        # Valores de C entre 0.25 e 0.40 com incrementos de 0.05
         'C': list(np.arange(0.25, 0.40, 0.05)),
-        'kernel': ['linear', 'poly', 'sigmoid', 'rbf']
+        'kernel': ['linear', 'poly', 'sigmoid', 'rbf']  # Tipos de kernel
     },
 ]
 
-
+# Configuração do modelo SVC com ajuste para classes desbalanceadas
 gs = GridSearchCV(
-    # SVC(),
-    # Ajuste para lidar com classes desbalanceadas
     SVC(class_weight='balanced'),
     param,
-    # scoring='precision',
-    scoring='recall',
+    scoring='recall',  # Usando recall como métrica de avaliação
     verbose=True
 )
-file_path = "pre_processed/students_dropout_train.csv"
+
+# Carregar o dataset escolhido
 dataset = pandas.read_csv(file_path)
-x_train = dataset.drop(columns=['Dropout'])
-t_train = dataset['Dropout']
+x_train = dataset.drop(columns=['Dropout'])  # Features
+t_train = dataset['Dropout']  # Target
 
-
-# Fit the model
+# Treinar o modelo usando GridSearch
 gs.fit(x_train, t_train)
 
-# Print the best parameters
+# Exibir os melhores parâmetros e o melhor score
 print("Best parameters found: ", gs.best_params_)
 print("Best score: ", gs.best_score_)
