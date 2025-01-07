@@ -12,42 +12,70 @@ def display_confusion_matrix(targets, predicted, classes, title):
     plt.show()
 
 
-dataset = pandas.read_csv(
-    "pre_processed/students_dropout_train.csv")
+# Função para perguntar ao usuário a escolha do dataset
+def get_dataset_type():
+    print("Escolha o tipo de dataset:")
+    print("1 - Completo (students_dropout_train.csv e students_dropout_test.csv)")
+    print("2 - Limpo (cm_students_dropout_train.csv e cm_students_dropout_test.csv)")
+    choice = input("Digite sua escolha (1 ou 2): ")
+
+    if choice == "1":
+        return "students_dropout_train.csv", "students_dropout_test.csv"
+    elif choice == "2":
+        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv"
+    else:
+        print("Escolha inválida! Carregando os datasets completos por padrão.")
+        return "students_dropout_train.csv", "students_dropout_test.csv"
+
+
+# Obter os nomes dos arquivos com base na escolha do usuário
+train_file, test_file = get_dataset_type()
+
+# Caminho dos arquivos
+train_file_path = f"pre_processed/{train_file}"
+test_file_path = f"pre_processed/{test_file}"
+
+# Carregar os datasets escolhidos
+dataset = pandas.read_csv(train_file_path)
 x_train = dataset.drop(columns=['Dropout'])
 t_train = dataset['Dropout']
 
-test_dataset = pandas.read_csv(
-    "pre_processed/students_dropout_test.csv")
+test_dataset = pandas.read_csv(test_file_path)
 x_test = test_dataset.drop(columns=['Dropout'])
 t_test = test_dataset['Dropout']
 
+# Configuração do modelo KNN
 n_neighbors = 1
-p = 3
+p = 1
 knn = KNeighborsClassifier(n_neighbors, p=p)
 knn.fit(x_train, t_train)
 
+# Previsões
 y_train = knn.predict(x_train)
 y_test = knn.predict(x_test)
 
 quality = dataset['Dropout'].unique()
 
-print("Training data:")
-print(f"accuracy: {accuracy_score(t_train, y_train) * 100:.2f}%")
-print(f"recall: {recall_score(t_train, y_train) * 100:.2f}%")
+# Exibir métricas para os dados de treino
+print("Dados de treinamento:")
+print(f"Accuracy: {accuracy_score(t_train, y_train) * 100:.2f}%")
+print(f"Recall: {recall_score(t_train, y_train) * 100:.2f}%")
 
-print("Testing data:")
-print(f"accuracy: {accuracy_score(t_test, y_test) * 100:.2f}%")
-print(f"recall: {recall_score(t_test, y_test) * 100:.2f}%")
+# Exibir métricas para os dados de teste
+print("Dados de teste:")
+print(f"Accuracy: {accuracy_score(t_test, y_test) * 100:.2f}%")
+print(f"Recall: {recall_score(t_test, y_test) * 100:.2f}%")
 
-print("Train report")
+# Relatório detalhado para treino e teste
+print("Relatório de treino:")
 train_report = classification_report(t_train, y_train, digits=4)
 print(train_report)
 
-print("Test report")
+print("Relatório de teste:")
 test_report = classification_report(t_test, y_test, digits=4)
 print(test_report)
 
+# Exibir matrizes de confusão
 display_confusion_matrix(t_train, y_train, quality,
-                         "Training data confusion matrix")
-display_confusion_matrix(t_test, y_test, quality, "Test data confusion matrix")
+                         "Matriz de confusão (treinamento)")
+display_confusion_matrix(t_test, y_test, quality, "Matriz de confusão (teste)")

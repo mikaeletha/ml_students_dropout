@@ -29,7 +29,7 @@ y = dataset_cleaned['Dropout']  # Variável alvo (target)
 
 # Dividir os dados em treino e teste
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.9, random_state=42)
+    X, y, train_size=0.9, random_state=42)
 
 # Juntar features e target para treino e teste
 train_data = pd.concat([X_train, y_train], axis=1)
