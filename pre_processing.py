@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 import seaborn as sns
 import matplotlib.pyplot as plt
+import joblib
 
 dataset = pandas.read_csv("data/students_dropout.csv")
 
@@ -51,10 +52,12 @@ x_train, x_test, t_train, t_test = (
     train_test_split(x, t, train_size=0.9, stratify=t, random_state=42))
 
 # COLOCAR OS DADOS NUMÉRICOS NA MESMA ESCALA
-scaller = MinMaxScaler((0, 1)).fit(x_train)
+scaler = MinMaxScaler((0, 1)).fit(x_train)
+# Salvar o scaler
+joblib.dump(scaler, 'models/students_scaler.pkl')
 
-x_train_scaled = scaller.transform(x_train)
-x_test_scaled = scaller.transform(x_test)
+x_train_scaled = scaler.transform(x_train)
+x_test_scaled = scaler.transform(x_test)
 
 # CRIAR DATAFRAME
 x_train_scaled = pandas.DataFrame(
