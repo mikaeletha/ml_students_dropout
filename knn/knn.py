@@ -3,6 +3,7 @@ import pandas
 from numpy import sort
 from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report, recall_score
 from sklearn.neighbors import KNeighborsClassifier
+import joblib
 
 
 def display_confusion_matrix(targets, predicted, classes, title):
@@ -46,9 +47,10 @@ t_test = test_dataset['Dropout']
 
 # Configuração do modelo KNN
 n_neighbors = 1
-p = 1
+p = 3
 knn = KNeighborsClassifier(n_neighbors, p=p)
 knn.fit(x_train, t_train)
+joblib.dump(knn, 'models/knn_students.pkl')
 
 # Previsões
 y_train = knn.predict(x_train)

@@ -23,6 +23,8 @@ dataset['FathersHigherEducation'] = dataset['FathersHigherEducation'].map({
                                                                           'No': 0, 'Yes': 1})
 dataset['Dropout'] = dataset['Dropout'].map({'No': 0, 'Yes': 1})
 
+# REMOVE COLUNA ID
+dataset = dataset.drop(columns=['StudentID'])
 # REMOVE LINHA DUPLICADAS
 dataset = dataset.drop_duplicates()
 print('REMOVE LINHA DUPLICADAS, OK')
@@ -49,7 +51,7 @@ x_train, x_test, t_train, t_test = (
     train_test_split(x, t, train_size=0.9, stratify=t, random_state=42))
 
 # COLOCAR OS DADOS NUMÉRICOS NA MESMA ESCALA
-scaller = MinMaxScaler((-1, 1)).fit(x_train)
+scaller = MinMaxScaler((0, 1)).fit(x_train)
 
 x_train_scaled = scaller.transform(x_train)
 x_test_scaled = scaller.transform(x_test)

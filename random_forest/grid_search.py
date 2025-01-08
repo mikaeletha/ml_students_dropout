@@ -28,7 +28,7 @@ file_path = f"pre_processed/{train_file}"
 # Hiperparâmetros para o GridSearch
 param = [
     {
-        'n_estimators': list(np.arange(603, 610, 1)),
+        'n_estimators': list(np.arange(304, 309, 1)),
         'max_features': ["sqrt", "log2", 10, 15]
     },
 ]

@@ -27,8 +27,7 @@ file_path = f"pre_processed/{train_file}"
 # Configuração dos parâmetros para GridSearchCV
 param = [
     {
-        # Valores de C entre 0.25 e 0.40 com incrementos de 0.05
-        'C': list(np.arange(0.25, 0.40, 0.05)),
+        'C': list(np.arange(0.50, 0.60, 0.05)),
         'kernel': ['linear', 'poly', 'sigmoid', 'rbf']  # Tipos de kernel
     },
 ]

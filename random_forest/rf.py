@@ -3,6 +3,7 @@ import pandas
 from numpy import sort
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+import joblib
 
 # Função para perguntar ao usuário a escolha do dataset
 
@@ -45,6 +46,7 @@ rf = RandomForestClassifier(
     n_estimators=603
 )
 rf.fit(x_train, t_train)
+joblib.dump(rf, 'models/rf_students.pkl')
 
 # Previsões do modelo
 y_train = rf.predict(x_train)

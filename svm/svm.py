@@ -3,6 +3,7 @@ import pandas
 from numpy import sort
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 from sklearn.svm import SVC
+import joblib
 
 # Função para perguntar ao usuário a escolha do dataset
 
@@ -40,14 +41,15 @@ x_test = test_dataset.drop(columns=[target])
 t_test = test_dataset[target]
 
 # Hiperparâmetros do modelo SVM
-c = 0.35
-kernel = "linear"
+c = 0.55
+kernel = "poly"
 
 # Criar modelo SVM
 svm = SVC(C=c, kernel=kernel)
 
 # Treinar modelo usando os dados de treinamento
 svm.fit(x_train, t_train)
+joblib.dump(svm, 'models/svm_students.pkl')
 
 # Saídas previstas pelo modelo - Previsões
 y_train = svm.predict(x_train)
