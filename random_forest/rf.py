@@ -15,16 +15,16 @@ def get_dataset_type():
     choice = input("Digite sua escolha (1 ou 2): ")
 
     if choice == "1":
-        return "students_dropout_train.csv", "students_dropout_test.csv"
+        return "students_dropout_train.csv", "students_dropout_test.csv", 'models/rf_students.pkl'
     elif choice == "2":
-        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv"
+        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv", 'models/rf_students_limited.pkl'
     else:
         print("Escolha inválida! Carregando os datasets completos por padrão.")
-        return "students_dropout_train.csv", "students_dropout_test.csv"
+        return "students_dropout_train.csv", "students_dropout_test.csv", 'models/rf_students.pkl'
 
 
 # Obter os nomes dos arquivos com base na escolha do usuário
-train_file, test_file = get_dataset_type()
+train_file, test_file, model_path = get_dataset_type()
 train_path = f"pre_processed/{train_file}"
 test_path = f"pre_processed/{test_file}"
 
@@ -43,10 +43,13 @@ t_test = test_dataset[output_var]
 # Criar o modelo Random Forest
 rf = RandomForestClassifier(
     max_features=10,
-    n_estimators=603
+    n_estimators=295
 )
 rf.fit(x_train, t_train)
-joblib.dump(rf, 'models/rf_students.pkl')
+
+# Salvar o modelo no caminho especificado
+joblib.dump(rf, model_path)
+print(f"Modelo Random Forest salvo em: {model_path}")
 
 # Previsões do modelo
 y_train = rf.predict(x_train)
@@ -66,14 +69,14 @@ def display_confusion_matrix(targets, predicted, classes, title):
 
 # Matriz de confusão para os dados de treino e teste
 display_confusion_matrix(t_train, y_train, classes,
-                         "Training data confusion matrix")
-display_confusion_matrix(t_test, y_test, classes, "Test data confusion matrix")
+                         "Matriz de Confusão (Treinamento)")
+display_confusion_matrix(t_test, y_test, classes, "Matriz de Confusão (Teste)")
 
 # Relatórios de classificação para os dados de treino e teste
-print("Train report")
+print("Relatório - Dados de Treinamento")
 train_report = classification_report(t_train, y_train, digits=4)
 print(train_report)
 
-print("Test report")
+print("Relatório - Dados de Teste")
 test_report = classification_report(t_test, y_test, digits=4)
 print(test_report)

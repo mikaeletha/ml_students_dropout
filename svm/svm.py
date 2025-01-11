@@ -15,16 +15,16 @@ def get_dataset_type():
     choice = input("Digite sua escolha (1 ou 2): ")
 
     if choice == "1":
-        return "students_dropout_train.csv", "students_dropout_test.csv"
+        return "students_dropout_train.csv", "students_dropout_test.csv", 'models/svm_students.pkl'
     elif choice == "2":
-        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv"
+        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv", 'models/svm_students_limited.pkl'
     else:
         print("Escolha inválida! Carregando os datasets completos por padrão.")
-        return "students_dropout_train.csv", "students_dropout_test.csv"
+        return "students_dropout_train.csv", "students_dropout_test.csv", 'models/svm_students.pkl'
 
 
 # Obter os nomes dos arquivos com base na escolha do usuário
-train_file, test_file = get_dataset_type()
+train_file, test_file, model_path = get_dataset_type()
 train_file_path = f"pre_processed/{train_file}"
 test_file_path = f"pre_processed/{test_file}"
 
@@ -41,7 +41,7 @@ x_test = test_dataset.drop(columns=[target])
 t_test = test_dataset[target]
 
 # Hiperparâmetros do modelo SVM
-c = 0.55
+c = 0.070
 kernel = "poly"
 
 # Criar modelo SVM
@@ -49,7 +49,10 @@ svm = SVC(C=c, kernel=kernel)
 
 # Treinar modelo usando os dados de treinamento
 svm.fit(x_train, t_train)
-joblib.dump(svm, 'models/svm_students.pkl')
+
+# Salvar o modelo no caminho especificado
+joblib.dump(svm, model_path)
+print(f"Modelo SVM salvo em: {model_path}")
 
 # Saídas previstas pelo modelo - Previsões
 y_train = svm.predict(x_train)
@@ -68,14 +71,14 @@ def display_confusion_matrix(targets, predicted, classes, title):
 
 # Exibir matrizes de confusão
 display_confusion_matrix(t_train, y_train, classes,
-                         "Training data confusion matrix")
-display_confusion_matrix(t_test, y_test, classes, "Test data confusion matrix")
+                         "Matriz de Confusão (Treinamento)")
+display_confusion_matrix(t_test, y_test, classes, "Matriz de Confusão (Teste)")
 
 # Relatórios de classificação
-print("Train report")
+print("Relatório - Dados de Treinamento")
 train_report = classification_report(t_train, y_train, digits=4)
 print(train_report)
 
-print("Test report")
+print("Relatório - Dados de Teste")
 test_report = classification_report(t_test, y_test, digits=4)
 print(test_report)

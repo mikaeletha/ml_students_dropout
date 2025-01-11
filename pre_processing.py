@@ -54,11 +54,11 @@ x_train, x_test, t_train, t_test = (
 # COLOCAR OS DADOS NUMÉRICOS NA MESMA ESCALA
 scaler = MinMaxScaler((0, 1)).fit(x_train)
 # Salvar o scaler
-joblib.dump(scaler, 'models/students_scaler.pkl')
 
 x_train_scaled = scaler.transform(x_train)
 x_test_scaled = scaler.transform(x_test)
 
+joblib.dump(scaler, 'models/students_scaler.pkl')
 # CRIAR DATAFRAME
 x_train_scaled = pandas.DataFrame(
     x_train_scaled, columns=x_train.columns, index=x_train.index)

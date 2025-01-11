@@ -21,16 +21,16 @@ def get_dataset_type():
     choice = input("Digite sua escolha (1 ou 2): ")
 
     if choice == "1":
-        return "students_dropout_train.csv", "students_dropout_test.csv"
+        return "students_dropout_train.csv", "students_dropout_test.csv", 'models/knn_students.pkl'
     elif choice == "2":
-        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv"
+        return "cm_students_dropout_train.csv", "cm_students_dropout_test.csv", 'models/knn_students_limited.pkl'
     else:
         print("Escolha inválida! Carregando os datasets completos por padrão.")
-        return "students_dropout_train.csv", "students_dropout_test.csv"
+        return "students_dropout_train.csv", "students_dropout_test.csv", 'models/knn_students.pkl'
 
 
 # Obter os nomes dos arquivos com base na escolha do usuário
-train_file, test_file = get_dataset_type()
+train_file, test_file, model_path = get_dataset_type()
 
 # Caminho dos arquivos
 train_file_path = f"pre_processed/{train_file}"
@@ -50,7 +50,10 @@ n_neighbors = 1
 p = 3
 knn = KNeighborsClassifier(n_neighbors, p=p)
 knn.fit(x_train, t_train)
-joblib.dump(knn, 'models/knn_students.pkl')
+
+# Salvar o modelo no caminho especificado
+joblib.dump(knn, model_path)
+print(f"Modelo KNN salvo em: {model_path}")
 
 # Previsões
 y_train = knn.predict(x_train)

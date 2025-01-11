@@ -1,5 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+import joblib
 
 # Carregar os dados originais
 dataset = pd.read_csv('pre_processed/students_dropout.csv')
@@ -34,6 +36,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Juntar features e target para treino e teste
 train_data = pd.concat([X_train, y_train], axis=1)
 test_data = pd.concat([X_test, y_test], axis=1)
+
+scaler = MinMaxScaler((0, 1)).fit(X_train)
+
+# Salvar o scaler
+joblib.dump(scaler, 'models/students_scaler_limited.pkl')
 
 # Salvar os conjuntos de dados de treino e teste combinados
 train_data.to_csv(

@@ -6,14 +6,20 @@ from matplotlib import pyplot as plt
 from numpy import sort
 from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report
 
+# dataset = pandas.read_csv('pre_processed/cm_students_dropout_train.csv')
+# print(dataset.columns)
+
 
 def read_dataset(filename):
-    columns_to_keep = [
-        "Priority", "Nacionality", "AdmissionGrade", "Relocated", "SpecialNeeds",
-        "HasDebt", "PayTuition", "Gender", "HasScholarship", "X1", "X2", "X3", "X4", "X5",
-        "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15", "Relationship",
-        "MothersHigherEducation", "FathersHigherEducation", "Dropout"
-    ]
+    # columns_to_keep = [
+    #     "Priority", "Nacionality", "AdmissionGrade", "Relocated", "SpecialNeeds",
+    #     "HasDebt", "PayTuition", "Gender", "HasScholarship", "X1", "X2", "X3", "X4", "X5",
+    #     "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15", "Relationship",
+    #     "MothersHigherEducation", "FathersHigherEducation", "Dropout"
+    # ]
+
+    columns_to_keep = ['Relocated', 'HasDebt', 'PayTuition', 'Gender', 'HasScholarship',
+                       'X2', 'X4', 'X5', 'X8', 'X9', 'X10', 'X11', 'Dropout']
 
     dataset = pandas.read_csv(filename)
 
@@ -84,4 +90,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-    # python wisconsin_model_results.py pre_processed/students_dropout.csv --scaler models/students_scaler.pkl
+# dataset_filename = "pre_processed/students_dropout_less_correl_train.csv"
+# scaler_filename = 'models/students_dropout_less_correl_scaler.pkl'
+    # python wisconsin_model_results.py pre_processed/cm_students_dropout_train.csv --scaler models/students_scaler.pkl
